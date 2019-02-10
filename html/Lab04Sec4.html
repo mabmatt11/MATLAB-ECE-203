@@ -1,0 +1,561 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Matt Bachmeier</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-02-24"><meta name="DC.source" content="Lab04Sec4.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Matt Bachmeier</h1><!--introduction--><p>ECE 203 Lab 4: Synthesis of Sinusoidal Signals -- Music Synthesis 2/26/2017</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Section 4.3</a></li><li><a href="#2">Section 4.3.1</a></li><li><a href="#3">Section 4.4</a></li><li><a href="#4">Section 4.5</a></li></ul></div><h2>Section 4.3<a name="1"></a></h2><pre class="codeinput">clear <span class="string">all</span>; close <span class="string">all</span>;
+
+load <span class="string">bach_fugue</span>;
+</pre><h2>Section 4.3.1<a name="2"></a></h2><pre class="codeinput"><span class="comment">% timingInfo.m</span>
+fprintf(<span class="string">'Timing Information:\n'</span>)
+bpm = 80
+beats_per_second = bpm/60
+seconds_per_beat = 1/beats_per_second
+seconds_per_pulse = seconds_per_beat/4
+[sppn,sppd] = rat(seconds_per_pulse);
+fprintf(<span class="string">'Seconds per pulse = %g/%g = %g\n'</span>,sppn,sppd, seconds_per_pulse)
+PulsesPerMeasure = 16;
+fprintf(<span class="string">'Pulses per measure = %g\n'</span>,PulsesPerMeasure)
+fs = 11025; <span class="comment">% Sampling rate</span>
+fprintf(<span class="string">'Sampling rate = %g Hz\n'</span>,fs)
+</pre><pre class="codeoutput">Timing Information:
+
+bpm =
+
+    80
+
+
+beats_per_second =
+
+    1.3333
+
+
+seconds_per_beat =
+
+    0.7500
+
+
+seconds_per_pulse =
+
+    0.1875
+
+Seconds per pulse = 3/16 = 0.1875
+Pulses per measure = 16
+Sampling rate = 11025 Hz
+</pre><h2>Section 4.4<a name="3"></a></h2><pre class="codeinput"><span class="comment">% myline.m;</span>
+<span class="comment">%function y = myline(t,t1,y1,t2,y2)</span>
+<span class="comment">%y = ( (y2-y1)/(t2-t1)*(t-t1) + y1 ) .* (t1&lt;=t &amp; t&lt;t2);</span>
+
+<span class="comment">% ADSR.m;</span>
+<span class="comment">%function y = ADSR(t,t1,t2,t3,t4,A1,A2,A3)</span>
+<span class="comment">% Sum of 4 straight lines:</span>
+<span class="comment">% line 1: (0,0) to (t1,A1)</span>
+<span class="comment">% line 2: (t1,A1) to (t2,A2)</span>
+<span class="comment">% line 3: (t2,A2) to (t3,A3)</span>
+<span class="comment">% line 4: (t3,A3) to (t4,0)</span>
+<span class="comment">%y = myline(t,0,0,t1,A1) + myline(t,t1,A1,t2,A2) + ...</span>
+<span class="comment">%myline(t,t2,A2,t3,A3) + myline(t,t3,A3,t4,0);</span>
+
+<span class="comment">% envelope.m;</span>
+<span class="comment">%function y = envelope(tin,seconds_per_pulse)</span>
+<span class="comment">% Shift time from [tin(1),tin(end)] to [0,T],</span>
+<span class="comment">% where T = tin(end)-tin(1).</span>
+<span class="comment">%t = tin - tin(1);</span>
+<span class="comment">%T = t(end); % The attack, release, and delay are always the same, it is the slope of the sustain that we are changing.</span>
+<span class="comment">%t1 = 1/8 * seconds_per_pulse;</span>
+<span class="comment">%A1 = 1;</span>
+<span class="comment">%t2 = .2 * seconds_per_pulse;</span>
+<span class="comment">%A2 = .85;</span>
+<span class="comment">%t3 = T - .2 * seconds_per_pulse;</span>
+<span class="comment">%A3 = .75;</span>
+<span class="comment">%t4 = T;</span>
+<span class="comment">% When t2 = .2 and t3 = .8, t3-t2 = .6,</span>
+<span class="comment">% giving us the slope of the sustain.</span>
+<span class="comment">%A3p = (A3-A2)/.6*(t3-t2) + A2;</span>
+<span class="comment">%if A3p &lt; 0 % prevent sustain from becoming negative</span>
+<span class="comment">%    t3 = t2 + .6*A2/(A2-A3);</span>
+<span class="comment">%    A3p = 0;</span>
+<span class="comment">%end</span>
+<span class="comment">%y = ADSR(t,t1,t2,t3,t4,A1,A2,A3p);</span>
+
+tt = linspace(0,1,200);
+plot(tt,envelope(tt,1)); grid <span class="string">on</span>
+</pre><img vspace="5" hspace="5" src="Lab04Sec4_01.png" style="width:560px;height:420px;" alt=""> <h2>Section 4.5<a name="4"></a></h2><pre class="codeinput"><span class="comment">% Analyze MyVoices data file</span>
+<span class="comment">% showVoice;</span>
+fprintf(<span class="string">'\n\nShow initial voice data\n\n'</span>)
+nVoices = numel(theVoices); <span class="comment">% Get number of voices</span>
+numNotes = zeros(1,nVoices); <span class="comment">% Pre-allocate array</span>
+lastNotePulseStart = numNotes; <span class="comment">% Pre-allocate array</span>
+<span class="keyword">for</span> v=1:nVoices
+    numNotes(v) = numel(theVoices(v).noteNumbers);
+    lastNotePulseStart(v) = max(theVoices(v).startPulses);
+    fprintf(<span class="string">'Voice %g has %g notes, last note starts at pulse %g\n'</span>, <span class="keyword">...</span>
+        v,numNotes(v),lastNotePulseStart(v))
+    k = min(10,numNotes(v));
+    fprintf(<span class="string">'startPulses durations noteNumbers\n'</span>)
+    disp([theVoices(v).startPulses(1:k)' theVoices(v).durations(1:k)' <span class="keyword">...</span>
+        theVoices(v).noteNumbers(1:k)'])
+    fprintf(<span class="string">'...\n'</span>);
+    disp([theVoices(v).startPulses(end) theVoices(v).durations(end)+1e-12 <span class="keyword">...</span>
+        theVoices(v).noteNumbers(end)]);
+    fprintf(<span class="string">'\n'</span>)
+<span class="keyword">end</span>
+veryLastNotePulseStart = max(lastNotePulseStart);
+fprintf(<span class="string">'Among all voices, the last note starts at pulse %g\n'</span>,<span class="keyword">...</span>
+    veryLastNotePulseStart)
+NumMeasures = ceil(veryLastNotePulseStart/PulsesPerMeasure);
+fprintf(<span class="string">'This piece +-contains %g measures\n'</span>,NumMeasures)
+PulsesPerSong = NumMeasures*PulsesPerMeasure;
+TotalTime = PulsesPerSong*seconds_per_pulse;
+Nsamp = 1 + floor(fs*TotalTime);
+fprintf(<span class="string">'Implementation is %g samples, or about %g seconds\n'</span>,<span class="keyword">...</span>
+    Nsamp,TotalTime)
+
+<span class="comment">% build voice</span>
+<span class="comment">%function [noteNums,durs] = buildVoice(voiceIn,PulsesPerSong)</span>
+<span class="comment">% Expand voice description.</span>
+<span class="comment">% The input data only tells us the pulse positions where notes</span>
+<span class="comment">% start and their durations. We use this to build a list of</span>
+<span class="comment">% pulses for the whole piece. If no note starts at pulse</span>
+<span class="comment">% k, then we set the note and duration for that pulse to zero.</span>
+<span class="comment">%durs = zeros(1,PulsesPerSong); % Pre-allocate array</span>
+<span class="comment">%noteNums = durs; % Pre-allocate array</span>
+<span class="comment">%for i=1:numel(voiceIn.startPulses)</span>
+<span class="comment">%    k = voiceIn.startPulses(i);</span>
+<span class="comment">%    noteNums(k) = voiceIn.noteNumbers(i);</span>
+<span class="comment">%    durs(k) = voiceIn.durations(i);</span>
+<span class="comment">%end</span>
+
+<span class="comment">% build music</span>
+<span class="comment">%function waveform = buildMusic(Nsamp,noteNums,durs,seconds_per_pulse,fs,env,harm)</span>
+<span class="comment">%waveform = zeros(1,Nsamp);</span>
+<span class="comment">%for pulse=1:numel(durs)</span>
+<span class="comment">%    d = durs(pulse);</span>
+<span class="comment">%    if d&gt;0</span>
+<span class="comment">%        k1 = ceil( (pulse -1)*seconds_per_pulse*fs );</span>
+<span class="comment">%        k2 = floor( ((pulse+d)-1)*seconds_per_pulse*fs );</span>
+<span class="comment">%        tt = (k1:k2)/fs;</span>
+<span class="comment">%        xx = key2noteModified(2,noteNums(pulse),tt,env,harm,seconds_per_pulse);</span>
+<span class="comment">%        waveform(k1+1:k2+1) = xx;</span>
+<span class="comment">%    end</span>
+<span class="comment">%end</span>
+
+<span class="comment">% Then build the waveforms</span>
+<span class="comment">%buildWaveform;</span>
+tf = {<span class="string">'false'</span> <span class="string">'true'</span> };
+env = true;
+harm = true;
+fprintf(<span class="string">'Envelope = %5s, Higher harmonics = %5s\n'</span>,tf{env+1},tf{harm+1})
+waveform = zeros(1,Nsamp);
+wvf = zeros(3,Nsamp);
+<span class="keyword">for</span> v=1:nVoices
+    [noteNums,durs] = buildVoice(theVoices(v),PulsesPerSong);
+    wvf(v,:) = buildMusic(Nsamp,noteNums,durs,seconds_per_pulse,fs,env,harm);
+    waveform = waveform + wvf(v,:);
+<span class="keyword">end</span>
+
+<span class="comment">% then plot and waveform and spectrogram</span>
+<span class="comment">%plotWaveform;</span>
+p1 = 1;
+p2 = 235; <span class="comment">% 235; % max pulse is 235</span>
+k1 = ceil((p1-1)*seconds_per_pulse*fs);
+k2 = floor((p2-1)*seconds_per_pulse*fs);
+tt = (k1:k2)/fs;
+figure(2)
+<span class="keyword">for</span> v=1:nVoices
+    subplot(nVoices,1,v)
+    plot(tt,wvf(v,k1+1:k2+1)); grid <span class="string">on</span>
+    title([ <span class="string">'Voice '</span> num2str(v) ])
+    xlabel(<span class="string">'Time (s)'</span>)
+<span class="keyword">end</span>
+figure(3)
+plot(tt,waveform(k1+1:k2+1)); grid <span class="string">on</span>
+
+<span class="comment">%plotSpectrogram;</span>
+
+wl = 512;
+<span class="keyword">for</span> v=1:nVoices
+    figure(3+v)
+    specgram(wvf(v,k1+1:k2+1),wl,fs)
+    title([ <span class="string">'Spectrogram of Voice '</span> num2str(v) ])
+    xlabel(<span class="string">'Time (sec)'</span>)
+    ylabel(<span class="string">'Frequency (Hz)'</span>)
+    axis([0 39 0 2500])
+<span class="keyword">end</span>
+
+<span class="comment">% play the sound</span>
+soundsc(waveform,fs);
+
+<span class="comment">% Scale waveform to have values between -1 and 1</span>
+<span class="comment">%ScaleSound.m;</span>
+<span class="comment">%function y = ScaleSound(x)</span>
+<span class="comment">% Do the scaling operation performed by soundsc and</span>
+<span class="comment">% return the result. Let a = min(x(:)), b = max(x(:)), and</span>
+<span class="comment">% f(x) = 2(x-a)/(b-a) - 1.</span>
+<span class="comment">% Notice that f is linear and satisfies</span>
+<span class="comment">% f(a) = -1 and f(b) = +1.</span>
+<span class="comment">%a = min(x(:));</span>
+<span class="comment">%b = max(x(:));</span>
+<span class="comment">%if b==a % then x is a constant vector, and we put</span>
+<span class="comment">%    y = zeros(size(x));</span>
+<span class="comment">%else</span>
+<span class="comment">%    y = (x-a)/(b-a)*2-1;</span>
+<span class="comment">%end</span>
+
+waveform=ScaleSound(waveform);
+
+<span class="comment">%plotWaveform;</span>
+p1 = 1;
+p2 = 235; <span class="comment">% 235; % max pulse is 235</span>
+k1 = ceil((p1-1)*seconds_per_pulse*fs);
+k2 = floor((p2-1)*seconds_per_pulse*fs);
+tt = (k1:k2)/fs;
+figure(2)
+<span class="keyword">for</span> v=1:nVoices
+    subplot(nVoices,1,v)
+    plot(tt,wvf(v,k1+1:k2+1)); grid <span class="string">on</span>
+    title([ <span class="string">'Voice '</span> num2str(v) ])
+    xlabel(<span class="string">'Time (s)'</span>)
+<span class="keyword">end</span>
+figure(3)
+plot(tt,waveform(k1+1:k2+1)); grid <span class="string">on</span>
+
+<span class="comment">% Write .wav file</span>
+audiowrite(<span class="string">'Lab04solutionOutput.wav'</span>,waveform,fs)
+</pre><pre class="codeoutput">
+
+Show initial voice data
+
+Voice 1 has 123 notes, last note starts at pulse 233
+startPulses durations noteNumbers
+    3.0000    1.0000   52.0000
+    4.0000    1.0000   51.0000
+    5.0000    1.2000   52.0000
+    7.0000    1.2000   47.0000
+    9.0000    1.2000   48.0000
+   11.0000    1.0000   52.0000
+   12.0000    1.0000   51.0000
+   13.0000    1.2000   52.0000
+   15.0000    1.2000   54.0000
+   17.0000    1.2000   47.0000
+
+...
+  233.0000    2.0000   43.0000
+
+
+Voice 2 has 130 notes, last note starts at pulse 233
+startPulses durations noteNumbers
+   35.0000    1.0000   59.0000
+   36.0000    1.0000   58.0000
+   37.0000    1.2000   59.0000
+   39.0000    1.2000   52.0000
+   41.0000    1.2000   55.0000
+   43.0000    1.0000   59.0000
+   44.0000    1.0000   58.0000
+   45.0000    1.2000   59.0000
+   47.0000    1.2000   61.0000
+   49.0000    1.2000   54.0000
+
+...
+  233.0000    2.0000   52.0000
+
+
+Voice 3 has 88 notes, last note starts at pulse 225
+startPulses durations noteNumbers
+   99.0000    1.0000   40.0000
+  100.0000    1.0000   39.0000
+  101.0000    1.2000   40.0000
+  103.0000    1.2000   35.0000
+  105.0000    1.2000   36.0000
+  107.0000    1.0000   40.0000
+  108.0000    1.0000   39.0000
+  109.0000    1.2000   40.0000
+  111.0000    1.2000   42.0000
+  113.0000    1.2000   35.0000
+
+...
+  225.0000    1.2000   31.0000
+
+
+Among all voices, the last note starts at pulse 233
+This piece +-contains 15 measures
+Implementation is 496126 samples, or about 45 seconds
+Envelope =  true, Higher harmonics =  true
+</pre><img vspace="5" hspace="5" src="Lab04Sec4_02.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Lab04Sec4_03.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Lab04Sec4_04.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Lab04Sec4_05.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Lab04Sec4_06.png" style="width:560px;height:420px;" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Matt Bachmeier
+% ECE 203
+% Lab 4: Synthesis of Sinusoidal Signals REPLACE_WITH_DASH_DASH Music Synthesis
+% 2/26/2017
+
+%% Section 4.3
+clear all; close all;
+
+load bach_fugue;
+
+%% Section 4.3.1
+
+% timingInfo.m
+fprintf('Timing Information:\n')
+bpm = 80 
+beats_per_second = bpm/60
+seconds_per_beat = 1/beats_per_second
+seconds_per_pulse = seconds_per_beat/4
+[sppn,sppd] = rat(seconds_per_pulse);
+fprintf('Seconds per pulse = %g/%g = %g\n',sppn,sppd, seconds_per_pulse)
+PulsesPerMeasure = 16;
+fprintf('Pulses per measure = %g\n',PulsesPerMeasure)
+fs = 11025; % Sampling rate
+fprintf('Sampling rate = %g Hz\n',fs)
+
+%% Section 4.4
+
+% myline.m;
+%function y = myline(t,t1,y1,t2,y2)
+%y = ( (y2-y1)/(t2-t1)*(t-t1) + y1 ) .* (t1<=t & t<t2);
+
+% ADSR.m;
+%function y = ADSR(t,t1,t2,t3,t4,A1,A2,A3)
+% Sum of 4 straight lines:
+% line 1: (0,0) to (t1,A1)
+% line 2: (t1,A1) to (t2,A2)
+% line 3: (t2,A2) to (t3,A3)
+% line 4: (t3,A3) to (t4,0)
+%y = myline(t,0,0,t1,A1) + myline(t,t1,A1,t2,A2) + ...
+%myline(t,t2,A2,t3,A3) + myline(t,t3,A3,t4,0);
+
+% envelope.m;
+%function y = envelope(tin,seconds_per_pulse)
+% Shift time from [tin(1),tin(end)] to [0,T],
+% where T = tin(end)-tin(1).
+%t = tin - tin(1);
+%T = t(end); % The attack, release, and delay are always the same, it is the slope of the sustain that we are changing.
+%t1 = 1/8 * seconds_per_pulse;
+%A1 = 1;
+%t2 = .2 * seconds_per_pulse;
+%A2 = .85;
+%t3 = T - .2 * seconds_per_pulse;
+%A3 = .75;
+%t4 = T;
+% When t2 = .2 and t3 = .8, t3-t2 = .6,
+% giving us the slope of the sustain.
+%A3p = (A3-A2)/.6*(t3-t2) + A2;
+%if A3p < 0 % prevent sustain from becoming negative
+%    t3 = t2 + .6*A2/(A2-A3);
+%    A3p = 0;
+%end
+%y = ADSR(t,t1,t2,t3,t4,A1,A2,A3p);
+
+tt = linspace(0,1,200);
+plot(tt,envelope(tt,1)); grid on
+
+%% Section 4.5
+
+% Analyze MyVoices data file
+% showVoice;
+fprintf('\n\nShow initial voice data\n\n')
+nVoices = numel(theVoices); % Get number of voices
+numNotes = zeros(1,nVoices); % Pre-allocate array
+lastNotePulseStart = numNotes; % Pre-allocate array
+for v=1:nVoices
+    numNotes(v) = numel(theVoices(v).noteNumbers);
+    lastNotePulseStart(v) = max(theVoices(v).startPulses);
+    fprintf('Voice %g has %g notes, last note starts at pulse %g\n', ...
+        v,numNotes(v),lastNotePulseStart(v))
+    k = min(10,numNotes(v));
+    fprintf('startPulses durations noteNumbers\n')
+    disp([theVoices(v).startPulses(1:k)' theVoices(v).durations(1:k)' ...
+        theVoices(v).noteNumbers(1:k)'])
+    fprintf('...\n');
+    disp([theVoices(v).startPulses(end) theVoices(v).durations(end)+1e-12 ...
+        theVoices(v).noteNumbers(end)]);
+    fprintf('\n')
+end
+veryLastNotePulseStart = max(lastNotePulseStart);
+fprintf('Among all voices, the last note starts at pulse %g\n',...
+    veryLastNotePulseStart)
+NumMeasures = ceil(veryLastNotePulseStart/PulsesPerMeasure);
+fprintf('This piece +-contains %g measures\n',NumMeasures)
+PulsesPerSong = NumMeasures*PulsesPerMeasure;
+TotalTime = PulsesPerSong*seconds_per_pulse;
+Nsamp = 1 + floor(fs*TotalTime);
+fprintf('Implementation is %g samples, or about %g seconds\n',...
+    Nsamp,TotalTime)
+
+% build voice
+%function [noteNums,durs] = buildVoice(voiceIn,PulsesPerSong)
+% Expand voice description.
+% The input data only tells us the pulse positions where notes
+% start and their durations. We use this to build a list of
+% pulses for the whole piece. If no note starts at pulse
+% k, then we set the note and duration for that pulse to zero.
+%durs = zeros(1,PulsesPerSong); % Pre-allocate array
+%noteNums = durs; % Pre-allocate array
+%for i=1:numel(voiceIn.startPulses)
+%    k = voiceIn.startPulses(i);
+%    noteNums(k) = voiceIn.noteNumbers(i);
+%    durs(k) = voiceIn.durations(i);
+%end
+
+% build music
+%function waveform = buildMusic(Nsamp,noteNums,durs,seconds_per_pulse,fs,env,harm)
+%waveform = zeros(1,Nsamp);
+%for pulse=1:numel(durs)
+%    d = durs(pulse);
+%    if d>0
+%        k1 = ceil( (pulse -1)*seconds_per_pulse*fs );
+%        k2 = floor( ((pulse+d)-1)*seconds_per_pulse*fs );
+%        tt = (k1:k2)/fs;
+%        xx = key2noteModified(2,noteNums(pulse),tt,env,harm,seconds_per_pulse);
+%        waveform(k1+1:k2+1) = xx;
+%    end
+%end
+
+% Then build the waveforms
+%buildWaveform;
+tf = {'false' 'true' };
+env = true;
+harm = true;
+fprintf('Envelope = %5s, Higher harmonics = %5s\n',tf{env+1},tf{harm+1})
+waveform = zeros(1,Nsamp);
+wvf = zeros(3,Nsamp);
+for v=1:nVoices
+    [noteNums,durs] = buildVoice(theVoices(v),PulsesPerSong);
+    wvf(v,:) = buildMusic(Nsamp,noteNums,durs,seconds_per_pulse,fs,env,harm);
+    waveform = waveform + wvf(v,:);
+end
+
+% then plot and waveform and spectrogram
+%plotWaveform;
+p1 = 1;
+p2 = 235; % 235; % max pulse is 235
+k1 = ceil((p1-1)*seconds_per_pulse*fs);
+k2 = floor((p2-1)*seconds_per_pulse*fs);
+tt = (k1:k2)/fs;
+figure(2)
+for v=1:nVoices
+    subplot(nVoices,1,v)
+    plot(tt,wvf(v,k1+1:k2+1)); grid on
+    title([ 'Voice ' num2str(v) ])
+    xlabel('Time (s)')
+end
+figure(3)
+plot(tt,waveform(k1+1:k2+1)); grid on
+
+%plotSpectrogram;
+
+wl = 512;
+for v=1:nVoices
+    figure(3+v)
+    specgram(wvf(v,k1+1:k2+1),wl,fs)
+    title([ 'Spectrogram of Voice ' num2str(v) ])
+    xlabel('Time (sec)')
+    ylabel('Frequency (Hz)')
+    axis([0 39 0 2500])
+end
+
+% play the sound
+soundsc(waveform,fs);
+
+% Scale waveform to have values between -1 and 1
+%ScaleSound.m; 
+%function y = ScaleSound(x)
+% Do the scaling operation performed by soundsc and
+% return the result. Let a = min(x(:)), b = max(x(:)), and
+% f(x) = 2(x-a)/(b-a) - 1.
+% Notice that f is linear and satisfies
+% f(a) = -1 and f(b) = +1.
+%a = min(x(:));
+%b = max(x(:));
+%if b==a % then x is a constant vector, and we put
+%    y = zeros(size(x));
+%else
+%    y = (x-a)/(b-a)*2-1;
+%end
+
+waveform=ScaleSound(waveform);
+
+%plotWaveform;
+p1 = 1;
+p2 = 235; % 235; % max pulse is 235
+k1 = ceil((p1-1)*seconds_per_pulse*fs);
+k2 = floor((p2-1)*seconds_per_pulse*fs);
+tt = (k1:k2)/fs;
+figure(2)
+for v=1:nVoices
+    subplot(nVoices,1,v)
+    plot(tt,wvf(v,k1+1:k2+1)); grid on
+    title([ 'Voice ' num2str(v) ])
+    xlabel('Time (s)')
+end
+figure(3)
+plot(tt,waveform(k1+1:k2+1)); grid on
+
+% Write .wav file
+audiowrite('Lab04solutionOutput.wav',waveform,fs)
+
+##### SOURCE END #####
+--></body></html>

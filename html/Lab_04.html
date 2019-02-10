@@ -1,0 +1,277 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Matt Bachmeier</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-02-13"><meta name="DC.source" content="Lab_04.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Matt Bachmeier</h1><!--introduction--><p>ECE 203 Lab 4: Synthesis of Sinusoidal Signals -- Music Synthesis 2/17/2017</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Section 2.2(a)</a></li><li><a href="#2">Section 2.2(b)</a></li><li><a href="#3">Section 2.2(c)</a></li><li><a href="#4">Section 2.2(d)</a></li><li><a href="#5">Section 2.2(e)</a></li><li><a href="#6">Section 2.3</a></li><li><a href="#7">Section 3.1 (key2note function code)</a></li><li><a href="#8">Section 3.2</a></li><li><a href="#9">Section 3.3</a></li></ul></div><h2>Section 2.2(a)<a name="1"></a></h2><pre class="codeinput">fsamp = 11025; <span class="comment">%sampling frequency</span>
+x1 = syn_sin(800, 100, fsamp, (0.5 - pi/3), -pi/3);
+tt = 0:1/fsamp:0.5; <span class="comment">%creates time axis with sinusoid above</span>
+soundsc(real(x1)) <span class="comment">%plays the created sinusoid</span>
+</pre><h2>Section 2.2(b)<a name="2"></a></h2><pre class="codeinput">x2 = syn_sin(1200, 80, fsamp, (0.8 + pi/4), pi/4);
+soundsc(real(x2))
+
+<span class="comment">% The sinusoid from part a sounds lower in pitch than the</span>
+<span class="comment">% sinusoid from part b. This is probably due to the higher</span>
+<span class="comment">% frequency in x2 than x1.</span>
+</pre><h2>Section 2.2(c)<a name="3"></a></h2><pre class="codeinput">N = 1102; <span class="comment">%One tenth of the sample rate</span>
+xx = [ x1, zeros(1,N), x2 ];
+soundsc(real(xx)) <span class="comment">%plays previous two signals in order with 0.1 second gap of silence.</span>
+</pre><h2>Section 2.2(d)<a name="4"></a></h2><pre class="codeinput"><span class="comment">% plot of the two signals concatenated together.</span>
+tt = (1/fsamp)*(1:length(xx)); plot(tt,xx);
+title(<span class="string">'Two signals concatenated together'</span>);
+xlabel(<span class="string">'Amplitude'</span>);
+ylabel(<span class="string">'Time (s)'</span>);
+</pre><pre class="codeoutput">Warning: Imaginary parts of complex X and/or Y arguments ignored 
+</pre><img vspace="5" hspace="5" src="Lab_04_01.png" style="width:560px;height:420px;" alt=""> <h2>Section 2.2(e)<a name="5"></a></h2><pre class="codeinput">fs = 22050;
+soundsc(real(xx), fs)
+
+<span class="comment">% Because we doubled the sampling period for the D-A converter</span>
+<span class="comment">% the duration of the sound was much shorter, probably around half</span>
+<span class="comment">% the time because the sampling rate was approximately doubled, and</span>
+<span class="comment">% the pitch was much higher than the previous sounds for similar reasons.</span>
+</pre><h2>Section 2.3<a name="6"></a></h2><pre class="codeinput">x.Amp = 7;
+x.phase = -pi/2;
+x.freq = 100;
+x.fs = 11025;
+x.timeInterval = 0:(1/x.fs):0.05;
+x.values = x.Amp*cos(2*pi*(x.freq)*(x.timeInterval) + x.phase);
+x.name = <span class="string">'My Signal'</span>;
+x            <span class="comment">%---- echo the contents of the structure "x"</span>
+plot(x.timeInterval, x.values)
+title(x.name)
+</pre><pre class="codeoutput">
+x = 
+
+             Amp: 7
+           phase: -1.5708
+            freq: 100
+              fs: 11025
+    timeInterval: [1x552 double]
+          values: [1x552 double]
+            name: 'My Signal'
+
+</pre><img vspace="5" hspace="5" src="Lab_04_02.png" style="width:560px;height:420px;" alt=""> <h2>Section 3.1 (key2note function code)<a name="7"></a></h2><pre class="codeinput"><span class="comment">%function xx = key2note(X, keynum, dur)</span>
+<span class="comment">% KEY2NOTE Produce a sinusoidal waveform corresponding to a</span>
+<span class="comment">%       given piano key number</span>
+<span class="comment">%</span>
+<span class="comment">%  usage: xx = key2note (X, keynum, dur)</span>
+<span class="comment">%</span>
+<span class="comment">%      xx = the output sinusoidal waveform</span>
+<span class="comment">%       X = complex amplitude for the sinusoid, X = A*exp(j*phi).</span>
+<span class="comment">%  keynum = the piano keyboard number of the desired note</span>
+<span class="comment">%     dur = the duration (in seconds) of the output note</span>
+<span class="comment">%</span>
+<span class="comment">%fs = 11025;</span>
+<span class="comment">%tt = 0:(1/fs):dur;</span>
+<span class="comment">%freq = 440*2^((keynum-49)/12);</span>
+<span class="comment">%xx = real( X*exp(j*2*pi*freq*tt);</span>
+</pre><h2>Section 3.2<a name="8"></a></h2><pre class="codeinput"><span class="comment">%--- play_scale.m</span>
+<span class="comment">%---</span>
+scale.keys = [40 42 44 45 47 49 51 52];
+<span class="comment">%--- NOTES: C  D  E  F  G  A  B  C</span>
+<span class="comment">%  key #40 is middle-C</span>
+<span class="comment">%</span>
+scale.durations = 0.25 * ones(1,length(scale.keys));
+fs = 11025;
+xx = zeros(1, sum(scale.durations)*fs+length(scale.keys));
+n1 = 1;
+<span class="keyword">for</span> kk = 1:length(scale.keys)
+    keynum = scale.keys(kk);
+    dur = scale.durations(kk);
+    tone = key2note(10, keynum, dur);
+    n2 = n1 + length(tone) - 1;
+    xx(n1:n2) = tone;
+    n1 = n2 +1;
+<span class="keyword">end</span>
+soundsc(xx, fs)
+</pre><h2>Section 3.3<a name="9"></a></h2><pre class="codeinput"><span class="comment">% The signal for the scale was created in section 3.2</span>
+
+<span class="comment">% Plots the scale as a spectrogram</span>
+specgram(xx,512,fs)
+title(<span class="string">'Play_scale spectrogram reading'</span>);
+xtitle(<span class="string">'Frequency (Hz)'</span>);
+ytitle(<span class="string">'Time (s)'</span>);
+
+<span class="comment">% When zoomed in you can see that the 440 Hz note is played from</span>
+<span class="comment">% time 1.25s to 1.5s, meaning that is it key 49 or A-440.</span>
+</pre><pre class="codeoutput error">Undefined function 'xtitle' for input arguments of type 'char'.
+
+Error in Lab_04 (line 106)
+xtitle('Frequency (Hz)');
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Matt Bachmeier
+% ECE 203
+% Lab 4: Synthesis of Sinusoidal Signals REPLACE_WITH_DASH_DASH Music Synthesis
+% 2/17/2017
+
+%% Section 2.2(a)
+
+fsamp = 11025; %sampling frequency
+x1 = syn_sin(800, 100, fsamp, (0.5 - pi/3), -pi/3);
+tt = 0:1/fsamp:0.5; %creates time axis with sinusoid above
+soundsc(real(x1)) %plays the created sinusoid
+
+%% Section 2.2(b)
+
+x2 = syn_sin(1200, 80, fsamp, (0.8 + pi/4), pi/4);
+soundsc(real(x2))
+
+% The sinusoid from part a sounds lower in pitch than the 
+% sinusoid from part b. This is probably due to the higher 
+% frequency in x2 than x1.
+
+%% Section 2.2(c)
+
+N = 1102; %One tenth of the sample rate
+xx = [ x1, zeros(1,N), x2 ];
+soundsc(real(xx)) %plays previous two signals in order with 0.1 second gap of silence.
+
+%% Section 2.2(d)
+
+% plot of the two signals concatenated together.
+tt = (1/fsamp)*(1:length(xx)); plot(tt,xx);
+title('Two signals concatenated together');
+xlabel('Amplitude');
+ylabel('Time (s)');
+
+%% Section 2.2(e)
+
+fs = 22050;
+soundsc(real(xx), fs)
+
+% Because we doubled the sampling period for the D-A converter
+% the duration of the sound was much shorter, probably around half
+% the time because the sampling rate was approximately doubled, and
+% the pitch was much higher than the previous sounds for similar reasons.
+
+%% Section 2.3
+
+x.Amp = 7;
+x.phase = -pi/2;
+x.freq = 100;
+x.fs = 11025;
+x.timeInterval = 0:(1/x.fs):0.05;
+x.values = x.Amp*cos(2*pi*(x.freq)*(x.timeInterval) + x.phase);
+x.name = 'My Signal';
+x            %REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH echo the contents of the structure "x"
+plot(x.timeInterval, x.values)
+title(x.name)
+
+%% Section 3.1 (key2note function code)
+
+%function xx = key2note(X, keynum, dur)
+% KEY2NOTE Produce a sinusoidal waveform corresponding to a
+%       given piano key number
+%
+%  usage: xx = key2note (X, keynum, dur)
+%
+%      xx = the output sinusoidal waveform
+%       X = complex amplitude for the sinusoid, X = A*exp(j*phi).
+%  keynum = the piano keyboard number of the desired note
+%     dur = the duration (in seconds) of the output note
+%
+%fs = 11025; 
+%tt = 0:(1/fs):dur;
+%freq = 440*2^((keynum-49)/12);
+%xx = real( X*exp(j*2*pi*freq*tt);
+
+%% Section 3.2
+
+%REPLACE_WITH_DASH_DASH- play_scale.m
+%REPLACE_WITH_DASH_DASH-
+scale.keys = [40 42 44 45 47 49 51 52];
+%REPLACE_WITH_DASH_DASH- NOTES: C  D  E  F  G  A  B  C
+%  key #40 is middle-C
+%
+scale.durations = 0.25 * ones(1,length(scale.keys));
+fs = 11025;
+xx = zeros(1, sum(scale.durations)*fs+length(scale.keys));
+n1 = 1;
+for kk = 1:length(scale.keys)
+    keynum = scale.keys(kk);
+    dur = scale.durations(kk);
+    tone = key2note(10, keynum, dur);
+    n2 = n1 + length(tone) - 1;
+    xx(n1:n2) = tone;
+    n1 = n2 +1;
+end
+soundsc(xx, fs)
+
+%% Section 3.3
+
+% The signal for the scale was created in section 3.2
+
+% Plots the scale as a spectrogram
+specgram(xx,512,fs)
+title('Play_scale spectrogram reading');
+xtitle('Frequency (Hz)');
+ytitle('Time (s)');
+
+% When zoomed in you can see that the 440 Hz note is played from
+% time 1.25s to 1.5s, meaning that is it key 49 or A-440.
+##### SOURCE END #####
+--></body></html>

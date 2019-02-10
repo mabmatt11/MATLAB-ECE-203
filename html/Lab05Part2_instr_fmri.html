@@ -1,0 +1,617 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Matt Bachmeier</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-03-08"><meta name="DC.source" content="Lab05Part2_instr_fmri.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Matt Bachmeier</h1><!--introduction--><p>Lab05.2 ECE 203</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Section 4.3 part a</a></li><li><a href="#2">part b. part c.</a></li><li><a href="#3">Part d.</a></li><li><a href="#4">Relating above results to FMRI</a></li><li><a href="#5">load fmri data</a></li></ul></div><h2>Section 4.3 part a<a name="1"></a></h2><p>Write Matlab code to perform the following tasks: 1. load fmri signal file fmri_sig.mat. The variable name is s. Find the length of s, N</p><p>*** enter your code here to load the signal and find N</p><pre class="codeinput">clc
+clear <span class="string">all</span>; close <span class="string">all</span>; <span class="comment">% clear the working memory and close all figure windows</span>
+
+load <span class="string">fmrisig.mat</span>
+
+N = length(s);
+
+<span class="comment">% 2. This signal is sampled at fs = 4 Hz. Generate the frequency axis "freq"</span>
+<span class="comment">% that extends from -floor( N/2 ) : N - 1 - floor( N/2 ) using analog frequency Hz as</span>
+<span class="comment">% unit. Compute DFT of s, S use fftshift to rearrange the spectral components.</span>
+<span class="comment">% Denote abs(S) as absS.</span>
+fs = 4;
+<span class="comment">%</span>
+<span class="comment">% ***** enter your code here to evaluate fre, S (after fftshift) and absS</span>
+
+freq = -floor(N/2): N-1-floor(N/2);
+
+S = fftshift(fft(s));
+absS = abs(S);
+
+
+<span class="comment">% 3. plot absS vs freq using semilogy, turn on grid. Using title and label</span>
+<span class="comment">% as given.</span>
+<span class="comment">%</span>
+<span class="comment">% ***** enter your code here for the semilogy plot of "absS" vs "freq"</span>
+figure,
+semilogy(freq,absS), grid <span class="string">on</span>
+title([<span class="string">'log plot of fmri_sig magnitude spectrum, fs = '</span> int2str(fs) <span class="string">' sec.'</span>])
+xlabel(<span class="string">'frequency (Hz)'</span>)
+</pre><img vspace="5" hspace="5" src="Lab05Part2_instr_fmri_01.png" style="width:560px;height:420px;" alt=""> <h2>part b. part c.<a name="2"></a></h2><p>Identify the dominant sinusoidal components Assuming a sampling rate of 4 samples/sec, what is the frequency (in Hz) of the dominant sinusoidal component?</p><p>Note that the DC component S(0) = sum(s) so if mean(s) is removed, the DFT of s will not have a DC component. This way, the dominante frequency will be more easy to be discovered. Below are some instructions for preparing the code:</p><p>1. remove mean of s, then compute its spectrum, call it SNoDC, and absolute value of the spectrum, call it absSNoDC.</p><p>*** enter your code here to produce absSNoDC</p><pre class="codeinput">SNoDC = fftshift(fft(s - mean(s)));
+absSNoDC = abs(SNoDC);
+
+<span class="comment">% 2. plot (not semilogy) of 'freq' vs 'absSNoDC.'</span>
+figure
+<span class="comment">% ***** enter your code here to plot 'absSNoDC' vs 'freq'</span>
+plot(freq,absSNoDC);
+title([<span class="string">'DC removed fmri_sig magnitude spectrum, fs = '</span> int2str(fs) <span class="string">' sec.'</span>])
+xlabel(<span class="string">'frequency (Hz)'</span>)
+
+
+
+
+<span class="comment">% 3.  Manually identify the frequencies of the peaks of the DC removed</span>
+<span class="comment">% spectrum</span>
+<span class="comment">% ****** Given answer here: the frequencies at the peaks are: -6 and 6</span>
+
+
+
+<span class="comment">% 4. Find the frequencies corresponding to the maximumm value of absSNoDC,</span>
+<span class="comment">% denote it as maxval. Using matlab command "find" to find the indices of the</span>
+<span class="comment">% peaks in absSNoDC, denote them as 'kidx.' Then translate those indices into</span>
+<span class="comment">% frequencies in Hz, called 'fidx.' Finally, print only those positive</span>
+<span class="comment">% frequencies denoted by variable 'pfidx.'</span>
+<span class="comment">% Note that the index corrsponding % 0 Hz is floor(N/2)+1.</span>
+<span class="comment">%</span>
+<span class="comment">% ****** enter code here for maxval, kidx, fidx and pfidx</span>
+
+maxval = max(absSNoDC);
+kidx = find(absSNoDC&gt;=maxval,2);
+fidx = ((kidx - floor(N/2) - 1)/N)*fs;
+pfidx = max(fidx);
+
+fprintf(<span class="string">'The dominant sinusoidal frequency is %g Hz\n'</span>,pfidx)
+fprintf(<span class="string">'Its magnitude is %g\n'</span>,maxval)
+k0 = find(freq==0);
+fprintf(<span class="string">'The DC magnitude is %g\n'</span>,absS(k0))
+</pre><pre class="codeoutput">The dominant sinusoidal frequency is 0.196721 Hz
+Its magnitude is 801.813
+The DC magnitude is 117349
+</pre><img vspace="5" hspace="5" src="Lab05Part2_instr_fmri_02.png" style="width:560px;height:420px;" alt=""> <h2>Part d.<a name="3"></a></h2><p>Find a good DC offset plus sinusoidal fit to the fMRI signal using the magnitude and phase of the DFT coeffcients associated with the dominant component. Plot and compare your fit with the raw data.</p><p>Note this task is not as easy as it looks. If we use the following formula, the result will not be correct since we use only absolute values of the complex amplitudes and hence miss out phase information.</p><p>sapp = (1/N)*(absS(k0)+maxval*cos(2*pi*pfidx/fs*[0:N-1]));</p><p>Instead, we borrow the complex amplitude values of the original (complex valued) spectrum S to form the approximated spectrum Sapp. Another caviar is that the frequency indices of S may have been shifted using fftshift. These include k0 and kidx. Thus, when Sapp is constructed, it needs to be fftshift before ifft to produce the time domain approximated signal sapp.</p><p>First construct Sapp to see if it gives the correct approximation of S with a DC component equal to S(k0) and two dominant sinusoids at kidx with complex amplitude equal to S(kidx). Note Sapp should have identical dimension as S. A trick is to initialize Sapp with a small random number at every frequency uniformly distributed over [0, 0.01]. To do so, we can use a Matlb function called 'rand.', see below.</p><pre class="codeinput">Sapp = 1e-2*rand(size(S));  <span class="comment">% this is initial value of Sapp</span>
+<span class="comment">%</span>
+<span class="comment">% ***** enter code here for approximated S, Sapp</span>
+
+Sapp(k0) = S(k0);
+Sapp(kidx) = S(kidx);
+
+<span class="comment">% plot Sapp and original S within the same range axis([-2 2 1 1e6])</span>
+figure
+subplot(1,2,1),semilogy(freq,absS),grid <span class="string">on</span>
+v1=axis; title(<span class="string">'original fmri spectrum'</span>),xlabel(<span class="string">'frequency (Hz)'</span>)
+subplot(1,2,2),semilogy(freq,abs(Sapp))
+grid <span class="string">on</span>, axis(v1)
+title(<span class="string">'spectrum of approximated fmri signal'</span>)
+
+<span class="comment">% Compute time domain approximated fmri signal using ifft and fftshift on</span>
+<span class="comment">% Sapp</span>
+<span class="comment">%</span>
+<span class="comment">% ***** enter the code here.</span>
+
+sapp = ifft(fftshift(Sapp));
+
+<span class="comment">% plot approximated s and original s</span>
+tidx=[0:N-1]/fs; <span class="comment">% unit in second</span>
+figure,
+plot(tidx,s,<span class="string">'r:'</span>,tidx,real(sapp),<span class="string">'b'</span>),
+legend(<span class="string">'original s'</span>,<span class="string">'approx. s'</span>),
+xlabel(<span class="string">'time (sec)'</span>)
+title(<span class="string">'original fmri signal and approximated fmri signal'</span>)
+</pre><img vspace="5" hspace="5" src="Lab05Part2_instr_fmri_03.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Lab05Part2_instr_fmri_04.png" style="width:560px;height:420px;" alt=""> <h2>Relating above results to FMRI<a name="4"></a></h2><p>Next, you will use the results above to map neural activity in the brain using fMRI. In fMRI, a series of MRI brain images are collected over time. Because oxgenated and deoxygenated hemoglobin have slightly different magnetic characteristics, variations in the MRI intensity indicate areas of the brain with increased blood flow and hence neural activity. The main challenge in fMRI is reliably detecting neural activity at different spatial locations (pixels) in the brain. The signals are noisy and the variation in intensity due to activation is very subtle. Consequently, statistical signal detection methods are routinely used to derive an "activation" map; a 2-d binary image of active and non-active brain regions.</p><p>The objective of this problem is to develop an DFT-based procedure for producing an activation map. To get you started, start with the simple program fmri.m that inputs the images from the data file fmri.mat, both of which are available on the moodle page. The basic idea is the compute the DFT of each pixel's time signal, and then check/detect the presence of a peak at the frequency corresponding to the period of the activation signal. In this case, the person was periodically tapping their finger, as above, and a representative response from an activated pixel is given in fmri_sig.mat. In developing your brain-mapping scheme, address/consider the following issues:</p><h2>load fmri data<a name="5"></a></h2><p>(e.) Determine an appropriate threshold for deciding whether or not a pixel is active. Discuss how and why you selected a particular threshold.</p><p>Although some of these code have been developed in earlier part of this lab. We choose to repeat them here so that it is easy to follow. Thus we begin by clear the working memory and close all graph windows</p><pre class="codeinput">clear <span class="string">all</span>; close <span class="string">all</span>;
+fs = 4; <span class="comment">% samplling freuency = 4 hz</span>
+load <span class="string">fmri.mat</span>
+<span class="comment">% contains 122 x 64 x 64 array called 'x', consisting of 122 MRI</span>
+<span class="comment">% brain images of 64 by 64 pixels collected at 4 Hz sampling rate</span>
+<span class="comment">% each image is 64x64 pixels</span>
+<span class="comment">% time-length of image sequence = 122/4 = 30.5 second</span>
+<span class="comment">%</span>
+<span class="comment">% default color map has 64 colors, so we scale x to have values from 0 to 63.</span>
+normfactor = 63/max(x(:));
+
+<span class="comment">% x is a 3D array and imagesc cannot display such a data structure Reshape</span>
+<span class="comment">% will convert the data strucure to a 2D array.</span>
+im = reshape(x(1,:,:),64,64);
+
+<span class="comment">% DefaultBrain is the first fmri image with each pixel value between 1 and</span>
+<span class="comment">% 64. This variable DefaultBrain will be used in following analysis</span>
+DefaultBrain = 1 + normfactor*im;
+image(DefaultBrain)
+
+<span class="comment">% show animation: this segment of code will play an animation on how the</span>
+<span class="comment">% brain image varies over time. Later, our goal is to identify some pixels</span>
+<span class="comment">% that has most visible time variation pattern. This/these pixel(s) will be</span>
+<span class="comment">% called "activated" pixel(s)</span>
+[imax,xmax,ymax] = size(x);
+<span class="keyword">for</span> i=1:imax
+    im = reshape(x(i,:,:),xmax,ymax);
+    imagesc(im),title([<span class="string">'time = '</span> num2str(i/fs) <span class="string">' sec'</span>]),
+    pause(.1)
+<span class="keyword">end</span>
+
+<span class="comment">% In this part, we manipulate the color map so that the fmmri mage is gray</span>
+<span class="comment">% scale while activated pixels will be highlighted in red color. This is</span>
+<span class="comment">% just a nice trick for visualization. You do not need to know the details</span>
+<span class="comment">% at this time if you do not want to.</span>
+<span class="comment">%</span>
+<span class="comment">% create a color map with all grey and one red color</span>
+grays = linspace(0,1,64)'; <span class="comment">% generate 64-1 equally spaced subdivisions in [0, 1]</span>
+<span class="comment">% The vector size is 64 x 1. gray = [0 1/63 2/63 ... 62/63 1]'</span>
+graymap = [grays grays grays]; <span class="comment">% this is an index color map of 64 levels of gray</span>
+newmap = [ graymap ; [ 1 0 0 ] ]; <span class="comment">% Add 65th row for red</span>
+colormap(newmap)
+
+<span class="comment">% Now, we will focus on the time series corresonding to x(:,1,1) (the (1,1)</span>
+<span class="comment">% pixel. We will find its dominant sinusodial frequences kidx</span>
+<span class="comment">% first create the time series as follows</span>
+s = x(:,1,1);
+<span class="comment">% Then compute its magnitude spectrum but WITHOUT shifting the frequency</span>
+<span class="comment">% axis by N/2.</span>
+Smag=abs(fft(s));
+<span class="comment">% Next, remove DC S(0) by setting first element of Smag to 0. Remember in</span>
+<span class="comment">% Matlab, array index begins with 1 instead of 0</span>
+Smag(1)=0;
+<span class="comment">% Find the indices kidx where the magnitude spectrum reaches its maximum</span>
+Smagmax=max(Smag);
+kidx = find(Smag==Smagmax);
+<span class="comment">%</span>
+<span class="comment">% Above procedure may be repeated for each pixel of the fmri image</span>
+<span class="comment">% sequence. Our goal is to find those pixels whose maximum magnitude</span>
+<span class="comment">% spectrum are within certain percentage of a maximum value among all fmri</span>
+<span class="comment">% data points.</span>
+<span class="comment">%</span>
+<span class="comment">% For this purpose you are going to develop a matlab function ScanPixels:</span>
+<span class="comment">% function Decision = ScanPixels(fmriData,kidx,MagnitudeFraction,MaxFreqIndexDiff)</span>
+<span class="comment">% where fmriData is the entire 3D array x loaded earlier in this section.</span>
+<span class="comment">% kidx is the set of frequency indices of maximum magnitude spectrum corresponding</span>
+<span class="comment">% to the (1,1) pixel computed above.</span>
+<span class="comment">% An internal variable Maxfmri = maximum of all fmri data (entire 3D array)</span>
+<span class="comment">% should be evaluated.</span>
+<span class="comment">% MagnitudeFraction is  a scaler in 0 to 1 that specifies the percentage of</span>
+<span class="comment">% the Maxfmri as a threshold to determine activated pixels.</span>
+<span class="comment">%</span>
+<span class="comment">% MaxFreqIndexDiff is a scalar such that if the frequency corresponding to</span>
+<span class="comment">% the maximum magnitude spectrum falls within the MaxFreqIndexDiff range,</span>
+<span class="comment">% AND the magnitude of the spectrum at that frequency is within the MagnitudeFraction</span>
+<span class="comment">% fraction of Maxfmri, then the pixel is deemed as activated.</span>
+<span class="comment">%</span>
+<span class="comment">% Decision is a matrix of the same dimension as one fmri image and contains</span>
+<span class="comment">% LOGICAL values of 0 or 1 (activated). for this, you need to initialize</span>
+<span class="comment">% this variable as follows:</span>
+<span class="comment">% Decision = false(xmax,ymax);</span>
+<span class="comment">% where [xmax, ymax] = dimension of a fmri image.</span>
+<span class="comment">% Also, the (i,j)th element of Decision is set by testing the logic</span>
+<span class="comment">% conditions:</span>
+<span class="comment">% (a) the k indices of the dominant sinusoids of (i,j) element's time</span>
+<span class="comment">% series is within MaxFreqIndexDiff of those of kidx</span>
+<span class="comment">% (b) the value of the corresponding Maximum Magnitude spectrum is no less</span>
+<span class="comment">% than MagnitudeFraction*Maxfmri</span>
+<span class="comment">%</span>
+<span class="comment">% ***** write ScanPixels.m and save into a separate m-file. Then</span>
+type <span class="string">ScanPixels.m</span>;
+
+<span class="comment">% Now, test the ScanPixels function you wrote as follows:</span>
+
+MagnitudeFraction = 0.5; <span class="comment">% 50%</span>
+MaxFreqIndexDiff = 0; <span class="comment">% frequency must be identical to that of kidx</span>
+brain = DefaultBrain;
+ActiveLocations = ScanPixels(x,kidx,MagnitudeFraction,MaxFreqIndexDiff);
+brain(ActiveLocations) = 65; <span class="comment">% Set active locations to index to red in color map.</span>
+image(brain);
+title([<span class="string">'MagFrac = '</span> num2str(MagnitudeFraction(i)) <span class="string">', MaxFreqIndexDiff = '</span> <span class="keyword">...</span>
+num2str(MaxFreqIndexDiff)'] )
+<span class="comment">% fprintf('i = %3i\n',i)</span>
+<span class="comment">% pause</span>
+<span class="comment">% end</span>
+fprintf(<span class="string">'\n\nDone\n'</span>)
+</pre><pre class="codeoutput">
+function Decision = ScanPixels(fmriData,kidx,MagnitudeFraction,MaxFreqIndexDiff)
+Decision  = false(64,64);
+
+check = zeros(64,64);
+for k = 1:64
+    for l = 1:64
+        S = fmriData(:,k,l);
+        Smag=abs(fft(S));
+        Smag(1)=0; 
+        check(k,l) = max(Smag);
+    end
+end
+Maxfmri = max(check);
+print(Maxfmri)
+
+for m = 1:64
+    for n = 1:64
+      p = abs(fft(fmriData(:,m,n))); 
+      p(1) = 0;
+      maxp = max(p);
+      index = find(p==maxp);
+      if index &lt;= or(kidx - MaxFreqIndexDiff, kidx+MaxFreqIndexDiff)
+          if maxp &gt;= MagnitudeFraction*Maxfmri
+              Decision(m,n) = true;
+          end
+      end
+    end
+end
+
+
+
+
+</pre><pre class="codeoutput error">Error using checkArgsForHandleToPrint
+Handle input argument contains nonhandle values.
+
+Error in checkArgsForHandleToPrint
+
+Error in print&gt;LocalCreatePrintJob (line 216)
+    handles = checkArgsForHandleToPrint(0, varargin{:});
+
+Error in print (line 38)
+    [pj, inputargs] = LocalCreatePrintJob(varargin{:});
+
+Error in ScanPixels (line 14)
+print(Maxfmri)
+
+Error in Lab05Part2_instr_fmri (line 284)
+ActiveLocations = ScanPixels(x,kidx,MagnitudeFraction,MaxFreqIndexDiff);
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Matt Bachmeier
+% Lab05.2 
+% ECE 203
+
+%% Section 4.3 part a
+% Write Matlab code to perform the following tasks:
+% 1. load fmri signal file fmri_sig.mat. The variable name is s. Find the
+% length of s, N
+%
+% ***** enter your code here to load the signal and find N
+
+clc
+clear all; close all; % clear the working memory and close all figure windows
+
+load fmrisig.mat
+
+N = length(s);
+
+% 2. This signal is sampled at fs = 4 Hz. Generate the frequency axis "freq"
+% that extends from -floor( N/2 ) : N - 1 - floor( N/2 ) using analog frequency Hz as
+% unit. Compute DFT of s, S use fftshift to rearrange the spectral components. 
+% Denote abs(S) as absS. 
+fs = 4; 
+%
+% ***** enter your code here to evaluate fre, S (after fftshift) and absS
+
+freq = -floor(N/2): N-1-floor(N/2);
+
+S = fftshift(fft(s));
+absS = abs(S);
+
+
+% 3. plot absS vs freq using semilogy, turn on grid. Using title and label
+% as given.
+%
+% ***** enter your code here for the semilogy plot of "absS" vs "freq"
+figure,
+semilogy(freq,absS), grid on
+title(['log plot of fmri_sig magnitude spectrum, fs = ' int2str(fs) ' sec.'])
+xlabel('frequency (Hz)')
+
+
+
+
+%% part b. part c.
+% Identify the dominant sinusoidal components
+% Assuming a sampling rate of 4 samples/sec, what is the frequency (in Hz) 
+% of the dominant sinusoidal component?
+% 
+% Note that the DC component S(0) = sum(s) so if mean(s) is removed, the
+% DFT of s will not have a DC component. This way, the dominante frequency
+% will be more easy to be discovered. Below are some instructions for
+% preparing the code:
+% 
+% 1. remove mean of s, then compute its spectrum, call it SNoDC, and
+% absolute value of the spectrum, call it absSNoDC.  
+% 
+% ***** enter your code here to produce absSNoDC
+
+SNoDC = fftshift(fft(s - mean(s)));
+absSNoDC = abs(SNoDC);
+
+% 2. plot (not semilogy) of 'freq' vs 'absSNoDC.'
+figure
+% ***** enter your code here to plot 'absSNoDC' vs 'freq'
+plot(freq,absSNoDC);
+title(['DC removed fmri_sig magnitude spectrum, fs = ' int2str(fs) ' sec.'])
+xlabel('frequency (Hz)')
+ 
+
+
+
+% 3.  Manually identify the frequencies of the peaks of the DC removed
+% spectrum
+% ****** Given answer here: the frequencies at the peaks are: -6 and 6
+
+
+
+% 4. Find the frequencies corresponding to the maximumm value of absSNoDC,
+% denote it as maxval. Using matlab command "find" to find the indices of the
+% peaks in absSNoDC, denote them as 'kidx.' Then translate those indices into 
+% frequencies in Hz, called 'fidx.' Finally, print only those positive 
+% frequencies denoted by variable 'pfidx.' 
+% Note that the index corrsponding % 0 Hz is floor(N/2)+1. 
+% 
+% ****** enter code here for maxval, kidx, fidx and pfidx
+
+maxval = max(absSNoDC);
+kidx = find(absSNoDC>=maxval,2);
+fidx = ((kidx - floor(N/2) - 1)/N)*fs;
+pfidx = max(fidx);
+
+fprintf('The dominant sinusoidal frequency is %g Hz\n',pfidx)
+fprintf('Its magnitude is %g\n',maxval)
+k0 = find(freq==0);
+fprintf('The DC magnitude is %g\n',absS(k0))
+
+
+%% Part d. 
+% Find a good DC offset plus sinusoidal fit to the fMRI signal using the 
+% magnitude and phase of the DFT coeffcients associated with the dominant 
+% component. Plot and compare your fit with the raw data.
+% 
+% Note this task is not as easy as it looks. If we use the following
+% formula, the result will not be correct since we use only absolute values
+% of the complex amplitudes and hence miss out phase information. 
+%
+% sapp = (1/N)*(absS(k0)+maxval*cos(2*pi*pfidx/fs*[0:N-1]));
+% 
+% Instead, we borrow the complex amplitude values of the original (complex 
+% valued) spectrum S to form the approximated spectrum Sapp. 
+% Another caviar is that the frequency indices of S may have been shifted
+% using fftshift. These include k0 and kidx. Thus, when Sapp is
+% constructed, it needs to be fftshift before ifft to produce the time
+% domain approximated signal sapp.
+% 
+% First construct Sapp to see if it gives the correct approximation
+% of S with a DC component equal to S(k0) and two dominant sinusoids at kidx
+% with complex amplitude equal to S(kidx). Note Sapp should have identical
+% dimension as S.
+% A trick is to initialize Sapp with a small random number at every
+% frequency uniformly distributed over [0, 0.01]. To do so, we can use a
+% Matlb function called 'rand.', see below.
+Sapp = 1e-2*rand(size(S));  % this is initial value of Sapp
+%
+% ***** enter code here for approximated S, Sapp
+
+Sapp(k0) = S(k0);
+Sapp(kidx) = S(kidx);
+
+% plot Sapp and original S within the same range axis([-2 2 1 1e6])
+figure
+subplot(1,2,1),semilogy(freq,absS),grid on
+v1=axis; title('original fmri spectrum'),xlabel('frequency (Hz)')
+subplot(1,2,2),semilogy(freq,abs(Sapp))
+grid on, axis(v1)
+title('spectrum of approximated fmri signal')
+
+% Compute time domain approximated fmri signal using ifft and fftshift on
+% Sapp
+% 
+% ***** enter the code here.
+
+sapp = ifft(fftshift(Sapp));
+
+% plot approximated s and original s
+tidx=[0:N-1]/fs; % unit in second
+figure,
+plot(tidx,s,'r:',tidx,real(sapp),'b'),
+legend('original s','approx. s'),
+xlabel('time (sec)')
+title('original fmri signal and approximated fmri signal')
+
+%% Relating above results to FMRI
+% 
+% Next, you will use the results above to map neural activity in the brain 
+% using fMRI. In fMRI, a series of MRI brain images are collected over time. 
+% Because oxgenated and deoxygenated hemoglobin have slightly different 
+% magnetic characteristics, variations in the MRI intensity indicate areas 
+% of the brain with increased blood flow and hence neural activity.
+% The main challenge in fMRI is reliably detecting neural activity at 
+% different spatial locations (pixels) in the brain. 
+% The signals are noisy and the variation in intensity due to activation is
+% very subtle. Consequently, statistical signal detection methods are routinely 
+% used to derive an "activation" map; a 2-d binary image of active and 
+% non-active brain regions. 
+% 
+% The objective of this problem is to develop an DFT-based procedure for 
+% producing an activation map. To get you started, start with the simple 
+% program fmri.m that inputs the images from the data file fmri.mat, both 
+% of which are available on the moodle page. The basic idea is the compute
+% the DFT of each pixel's time signal, and then check/detect the presence 
+% of a peak at the frequency corresponding to the period of the activation 
+% signal. In this case, the person was periodically tapping their finger, 
+% as above, and a representative response from an activated pixel is given 
+% in fmri_sig.mat. In developing your brain-mapping scheme, address/consider
+% the following issues:
+% 
+%% load fmri data
+% 
+% (e.) Determine an appropriate threshold for deciding whether or not a pixel 
+% is active. Discuss how and why you selected a particular threshold.
+% 
+% Although some of these code have been developed in earlier part of this
+% lab. We choose to repeat them here so that it is easy to follow.
+% Thus we begin by clear the working memory and close all graph windows
+clear all; close all;
+fs = 4; % samplling freuency = 4 hz
+load fmri.mat
+% contains 122 x 64 x 64 array called 'x', consisting of 122 MRI
+% brain images of 64 by 64 pixels collected at 4 Hz sampling rate
+% each image is 64x64 pixels
+% time-length of image sequence = 122/4 = 30.5 second
+% 
+% default color map has 64 colors, so we scale x to have values from 0 to 63.
+normfactor = 63/max(x(:)); 
+
+% x is a 3D array and imagesc cannot display such a data structure Reshape
+% will convert the data strucure to a 2D array. 
+im = reshape(x(1,:,:),64,64);
+
+% DefaultBrain is the first fmri image with each pixel value between 1 and
+% 64. This variable DefaultBrain will be used in following analysis
+DefaultBrain = 1 + normfactor*im;
+image(DefaultBrain)
+
+% show animation: this segment of code will play an animation on how the
+% brain image varies over time. Later, our goal is to identify some pixels
+% that has most visible time variation pattern. This/these pixel(s) will be
+% called "activated" pixel(s)
+[imax,xmax,ymax] = size(x);
+for i=1:imax
+    im = reshape(x(i,:,:),xmax,ymax);
+    imagesc(im),title(['time = ' num2str(i/fs) ' sec']),
+    pause(.1)
+end
+
+% In this part, we manipulate the color map so that the fmmri mage is gray
+% scale while activated pixels will be highlighted in red color. This is
+% just a nice trick for visualization. You do not need to know the details
+% at this time if you do not want to. 
+% 
+% create a color map with all grey and one red color
+grays = linspace(0,1,64)'; % generate 64-1 equally spaced subdivisions in [0, 1]
+% The vector size is 64 x 1. gray = [0 1/63 2/63 ... 62/63 1]'
+graymap = [grays grays grays]; % this is an index color map of 64 levels of gray
+newmap = [ graymap ; [ 1 0 0 ] ]; % Add 65th row for red
+colormap(newmap)
+
+% Now, we will focus on the time series corresonding to x(:,1,1) (the (1,1)
+% pixel. We will find its dominant sinusodial frequences kidx 
+% first create the time series as follows
+s = x(:,1,1); 
+% Then compute its magnitude spectrum but WITHOUT shifting the frequency
+% axis by N/2.
+Smag=abs(fft(s));
+% Next, remove DC S(0) by setting first element of Smag to 0. Remember in
+% Matlab, array index begins with 1 instead of 0
+Smag(1)=0; 
+% Find the indices kidx where the magnitude spectrum reaches its maximum
+Smagmax=max(Smag);
+kidx = find(Smag==Smagmax); 
+% 
+% Above procedure may be repeated for each pixel of the fmri image
+% sequence. Our goal is to find those pixels whose maximum magnitude
+% spectrum are within certain percentage of a maximum value among all fmri
+% data points. 
+% 
+% For this purpose you are going to develop a matlab function ScanPixels:
+% function Decision = ScanPixels(fmriData,kidx,MagnitudeFraction,MaxFreqIndexDiff)
+% where fmriData is the entire 3D array x loaded earlier in this section. 
+% kidx is the set of frequency indices of maximum magnitude spectrum corresponding 
+% to the (1,1) pixel computed above.
+% An internal variable Maxfmri = maximum of all fmri data (entire 3D array)
+% should be evaluated. 
+% MagnitudeFraction is  a scaler in 0 to 1 that specifies the percentage of
+% the Maxfmri as a threshold to determine activated pixels.
+% 
+% MaxFreqIndexDiff is a scalar such that if the frequency corresponding to 
+% the maximum magnitude spectrum falls within the MaxFreqIndexDiff range,
+% AND the magnitude of the spectrum at that frequency is within the MagnitudeFraction
+% fraction of Maxfmri, then the pixel is deemed as activated.
+% 
+% Decision is a matrix of the same dimension as one fmri image and contains
+% LOGICAL values of 0 or 1 (activated). for this, you need to initialize
+% this variable as follows: 
+% Decision = false(xmax,ymax);
+% where [xmax, ymax] = dimension of a fmri image.
+% Also, the (i,j)th element of Decision is set by testing the logic
+% conditions: 
+% (a) the k indices of the dominant sinusoids of (i,j) element's time
+% series is within MaxFreqIndexDiff of those of kidx
+% (b) the value of the corresponding Maximum Magnitude spectrum is no less 
+% than MagnitudeFraction*Maxfmri
+% 
+% ***** write ScanPixels.m and save into a separate m-file. Then 
+type ScanPixels.m;
+
+% Now, test the ScanPixels function you wrote as follows:
+
+MagnitudeFraction = 0.5; % 50%
+MaxFreqIndexDiff = 0; % frequency must be identical to that of kidx
+brain = DefaultBrain;
+ActiveLocations = ScanPixels(x,kidx,MagnitudeFraction,MaxFreqIndexDiff);
+brain(ActiveLocations) = 65; % Set active locations to index to red in color map.
+image(brain);
+title(['MagFrac = ' num2str(MagnitudeFraction(i)) ', MaxFreqIndexDiff = ' ...
+num2str(MaxFreqIndexDiff)'] )
+% fprintf('i = %3i\n',i)
+% pause
+% end
+fprintf('\n\nDone\n')
+##### SOURCE END #####
+--></body></html>
